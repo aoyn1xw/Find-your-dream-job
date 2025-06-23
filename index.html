@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dream Job Quiz</title>
+  <style>
+    :root {
+      --primary-color: #3a86ff;
+      --secondary-color: #2667cc;
+      --text-color: #333;
+      --background-color: #f8f9fa;
+      --card-color: white;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background: var(--background-color);
+      padding: 20px;
+      text-align: center;
+      color: var(--text-color);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .card {
+      background: var(--card-color);
+      padding: 2rem;
+      margin: auto;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      margin-top: 0;
+    }
+    
+    h2 {
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    
+    button {
+      padding: 12px 24px;
+      margin: 8px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary-color);
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      max-width: 300px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    button:hover {
+      background: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+    .answer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .progress-container {
+      width: 100%;
+      background-color: #e9ecef;
+      border-radius: 8px;
+      margin: 1rem 0;
+      height: 8px;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+    
+    .result-card {
+      text-align: left;
+      padding: 1.5rem;
+      border-radius: 16px;
+      background: white;
+      margin: 1.2rem 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: var(--primary-color);
+    }
+    
+    .primary-result {
+      background: linear-gradient(to right, #f0f7ff, white);
+      transform: scale(1.03);
+    }
+    
+    .primary-result::before {
+      width: 8px;
+      background: linear-gradient(to bottom, var(--primary-color), #64a5ff);
+    }
+    
+    .result-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+    
+    .primary-result:hover {
+      transform: translateY(-6px) scale(1.05);
+    }
+    
+    .job-title {
+      color: var(--primary-color);
+      margin: 0.5rem 0 1rem;
+      font-weight: 700;
+      font-size: 1.3rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .job-title::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--primary-color);
+      border-radius: 3px;
+    }
+    
+    .skills-breakdown {
+      background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    
+    .skills-breakdown h3 {
+      margin-bottom: 1.2rem;
+      color: var(--primary-color);
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .skill-bubbles {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 1.5rem;
+    }
+    
+    .skill-bubble {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .skill-bubble:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+    
+    .skill-bubble span.skill-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-color);
+      z-index: 1;
+      text-align: center;
+      padding: 0 8px;
+    }
+    
+    .skill-bubble span.skill-level {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+      z-index: 1;
+    }
+    
+    .skill-bubble .bubble-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(58, 134, 255, 0.15);
+      transition: height 0.8s ease;
+      border-radius: 50%;
+    }
+    
+    .career-requirements {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    }
+    
+    .career-requirements p {
+      margin: 6px 0;
+    }
+    
+    .career-requirements strong {
+      color: var(--primary-color);
+    }
+    
+    /* Top level styling for card and container */
+    .card {
+      position: relative;
+      background: linear-gradient(to bottom, var(--card-color), #fdfdfd);
+    }
+    
+    /* Animation for the bubble elements */
+    @keyframes bubbleRise {
+      0% { transform: translateY(20px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    
+    .skill-bubble {
+      animation: bubbleRise 0.6s forwards;
+      animation-delay: calc(var(--i) * 0.1s);
+      opacity: 0;
+    }
+    
+    .result-card {
+      animation: fadeIn 0.5s forwards;
+      animation-delay: calc(var(--i) * 0.15s);
+      opacity: 0;
+    }
+    
+    @keyframes fadeIn {
+      0% { transform: translateY(20px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    
+    /* Responsive design adjustments */
+    @media (max-width: 768px) {
+      .card {
+        width: 95%;
+        padding: 1.5rem;
+      }
+      
+      button {
+        padding: 12px 16px;
+      }
+      
+      .skills-breakdown {
+        padding: 1rem;
+      }
+      
+      h2 {
+        font-size: 1.4rem;
+      }
+      
+      .result-card {
+        padding: 1.2rem;
+      }
+      
+      .skill-bubbles {
+        gap: 8px;
+      }
+      
+      .skill-bubble {
+        width: 90px;
+        height: 90px;
+      }
+      
+      .skill-bubble span.skill-level {
+        font-size: 18px;
+      }
+      
+      .skill-bubble span.skill-name {
+        font-size: 12px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .skill-bubble {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .skill-bubble span.skill-name {
+        font-size: 11px;
+      }
+      
+      .job-title {
+        font-size: 1.2rem;
+      }
+      
+      .career-requirements {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="quiz-box">
+    <h1>Find Your Dream Job!</h1>
+    <p>Discover your ideal career path with this quick personality quiz.</p>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <script>
+    const allQuestions = [
+      {
+        text: "Do you enjoy working with people or computers?",
+        answers: [
+          { text: "People", score: { people: 3, creative: 1, technical: 0, leadership: 2, healthcare: 2, finance: 1, sports: 1, analytical: 0 } },
+          { text: "Both", score: { people: 2, creative: 1, technical: 2, leadership: 2, healthcare: 1, finance: 2, sports: 1, analytical: 1 } },
+          { text: "Computers", score: { people: 0, creative: 1, technical: 3, leadership: 1, healthcare: 0, finance: 2, sports: 0, analytical: 3 } }
+        ]
+      },
+      {
+        text: "Do you prefer creative or logical tasks?",
+        answers: [
+          { text: "Creative", score: { people: 1, creative: 3, technical: 0, leadership: 1, healthcare: 1, finance: 0, sports: 1, analytical: 0 } },
+          { text: "Both", score: { people: 1, creative: 2, technical: 2, leadership: 2, healthcare: 2, finance: 1, sports: 1, analytical: 2 } },
+          { text: "Logical", score: { people: 1, creative: 0, technical: 3, leadership: 1, healthcare: 2, finance: 3, sports: 1, analytical: 3 } }
+        ]
+      },
+      {
+        text: "Where do you want to work?",
+        answers: [
+          { text: "Outdoors", score: { people: 2, creative: 2, technical: 0, leadership: 1, healthcare: 1, finance: 0, sports: 3, analytical: 0 } },
+          { text: "In an office", score: { people: 2, creative: 1, technical: 2, leadership: 2, healthcare: 1, finance: 3, sports: 0, analytical: 2 } },
+          { text: "From home", score: { people: 0, creative: 2, technical: 3, leadership: 1, healthcare: 0, finance: 1, sports: 0, analytical: 2 } }
+        ]
+      },
+      {
+        text: "What's your favorite school subject?",
+        answers: [
+          { text: "Art or Music", score: { people: 1, creative: 3, technical: 0, leadership: 1, healthcare: 0, finance: 0, sports: 0, analytical: 0 } },
+          { text: "English or History", score: { people: 2, creative: 2, technical: 0, leadership: 2, healthcare: 1, finance: 1, sports: 0, analytical: 1 } },
+          { text: "Math or Science", score: { people: 0, creative: 0, technical: 3, leadership: 1, healthcare: 3, finance: 3, sports: 1, analytical: 3 } }
+        ]
+      },
+      {
+        text: "Do you want a job that helps people?",
+        answers: [
+          { text: "Yes, very important", score: { people: 3, creative: 1, technical: 0, leadership: 2, healthcare: 3, finance: 1, sports: 2, analytical: 0 } },
+          { text: "Somewhat", score: { people: 2, creative: 1, technical: 1, leadership: 1, healthcare: 2, finance: 2, sports: 1, analytical: 1 } },
+          { text: "Not really", score: { people: 0, creative: 1, technical: 2, leadership: 1, healthcare: 0, finance: 2, sports: 1, analytical: 2 } }
+        ]
+      },
+      {
+        text: "How do you like to solve problems?",
+        answers: [
+          { text: "Talking with others", score: { people: 3, creative: 1, technical: 0, leadership: 2, healthcare: 1, finance: 1, sports: 1, analytical: 0 } },
+          { text: "Trying different ideas", score: { people: 1, creative: 3, technical: 1, leadership: 1, healthcare: 2, finance: 1, sports: 2, analytical: 1 } },
+          { text: "Analyzing and planning", score: { people: 0, creative: 0, technical: 3, leadership: 2, healthcare: 2, finance: 3, sports: 1, analytical: 3 } }
+        ]
+      },
+      {
+        text: "How important is salary in your career choice?",
+        answers: [
+          { text: "Very important", score: { people: 0, creative: 0, technical: 2, leadership: 3, healthcare: 2, finance: 3, sports: 1, analytical: 2 } },
+          { text: "Somewhat important", score: { people: 1, creative: 1, technical: 1, leadership: 2, healthcare: 2, finance: 2, sports: 2, analytical: 1 } },
+          { text: "Not as important as enjoyment", score: { people: 2, creative: 2, technical: 0, leadership: 0, healthcare: 1, finance: 0, sports: 3, analytical: 0 } }
+        ]
+      },
+      {
+        text: "Do you prefer to lead or follow?",
+        answers: [
+          { text: "Lead", score: { people: 2, creative: 1, technical: 1, leadership: 3, healthcare: 2, finance: 2, sports: 2, analytical: 1 } },
+          { text: "Sometimes lead, sometimes follow", score: { people: 2, creative: 1, technical: 1, leadership: 1, healthcare: 2, finance: 1, sports: 2, analytical: 1 } },
+          { text: "Follow", score: { people: 1, creative: 2, technical: 2, leadership: 0, healthcare: 1, finance: 1, sports: 1, analytical: 2 } }
+        ]
+      },
+      {
+        text: "How do you feel about public speaking?",
+        answers: [
+          { text: "Enjoy it", score: { people: 2, creative: 1, technical: 0, leadership: 3, healthcare: 1, finance: 1, sports: 2, analytical: 0 } },
+          { text: "It's okay", score: { people: 1, creative: 1, technical: 1, leadership: 2, healthcare: 1, finance: 1, sports: 1, analytical: 1 } },
+          { text: "Avoid it", score: { people: 0, creative: 2, technical: 3, leadership: 0, healthcare: 2, finance: 2, sports: 0, analytical: 3 } }
+        ]
+      },
+      {
+        text: "Do you like working under pressure?",
+        answers: [
+          { text: "Yes, I thrive under pressure", score: { people: 1, creative: 1, technical: 2, leadership: 3, healthcare: 3, finance: 2, sports: 3, analytical: 2 } },
+          { text: "I can handle it", score: { people: 1, creative: 1, technical: 2, leadership: 1, healthcare: 2, finance: 2, sports: 2, analytical: 2 } },
+          { text: "I prefer a relaxed atmosphere", score: { people: 2, creative: 2, technical: 1, leadership: 0, healthcare: 0, finance: 1, sports: 0, analytical: 1 } }
+        ]
+      },
+      {
+        text: "What hobby do you enjoy most?",
+        answers: [
+          { text: "Sports or fitness", score: { people: 2, creative: 1, technical: 0, leadership: 1, healthcare: 2, finance: 0, sports: 3, analytical: 0 } },
+          { text: "Arts, crafts or music", score: { people: 1, creative: 3, technical: 0, leadership: 0, healthcare: 1, finance: 0, sports: 0, analytical: 0 } },
+          { text: "Technology or gaming", score: { people: 0, creative: 2, technical: 3, leadership: 0, healthcare: 0, finance: 1, sports: 0, analytical: 2 } }
+        ]
+      },
+      {
+        text: "How do you feel about math and statistics?",
+        answers: [
+          { text: "Love working with numbers", score: { people: 0, creative: 0, technical: 3, leadership: 0, healthcare: 1, finance: 3, sports: 0, analytical: 3 } },
+          { text: "They're okay", score: { people: 1, creative: 1, technical: 1, leadership: 1, healthcare: 2, finance: 1, sports: 1, analytical: 1 } },
+          { text: "Prefer to avoid them", score: { people: 2, creative: 2, technical: 0, leadership: 0, healthcare: 0, finance: 0, sports: 2, analytical: 0 } }
+        ]
+      },
+      {
+        text: "How do you feel about physical work?",
+        answers: [
+          { text: "Enjoy being physically active", score: { people: 1, creative: 0, technical: 0, leadership: 1, healthcare: 2, finance: 0, sports: 3, analytical: 0 } },
+          { text: "Don't mind some physical activity", score: { people: 1, creative: 1, technical: 1, leadership: 1, healthcare: 2, finance: 0, sports: 2, analytical: 0 } },
+          { text: "Prefer mental challenges", score: { people: 0, creative: 2, technical: 3, leadership: 1, healthcare: 1, finance: 3, sports: 0, analytical: 3 } }
+        ]
+      },
+      {
+        text: "Are you interested in healthcare or medicine?",
+        answers: [
+          { text: "Very interested", score: { people: 2, creative: 0, technical: 1, leadership: 1, healthcare: 3, finance: 0, sports: 1, analytical: 2 } },
+          { text: "Somewhat interested", score: { people: 1, creative: 0, technical: 1, leadership: 1, healthcare: 2, finance: 0, sports: 1, analytical: 1 } },
+          { text: "Not really interested", score: { people: 0, creative: 1, technical: 1, leadership: 0, healthcare: 0, finance: 2, sports: 1, analytical: 1 } }
+        ]
+      },
+      {
+        text: "Do you enjoy analyzing financial data or markets?",
+        answers: [
+          { text: "Yes, very much", score: { people: 0, creative: 0, technical: 2, leadership: 1, healthcare: 0, finance: 3, sports: 0, analytical: 3 } },
+          { text: "It's interesting sometimes", score: { people: 0, creative: 0, technical: 1, leadership: 1, healthcare: 0, finance: 2, sports: 0, analytical: 2 } },
+          { text: "Not at all", score: { people: 1, creative: 1, technical: 0, leadership: 0, healthcare: 1, finance: 0, sports: 1, analytical: 0 } }
+        ]
+      },
+      {
+        text: "How much education are you willing to complete?",
+        answers: [
+          { text: "Advanced degree (Master's/PhD)", score: { people: 1, creative: 1, technical: 2, leadership: 2, healthcare: 3, finance: 2, sports: 0, analytical: 3 } },
+          { text: "Bachelor's degree", score: { people: 1, creative: 1, technical: 2, leadership: 1, healthcare: 2, finance: 2, sports: 1, analytical: 2 } },
+          { text: "Certificate or Associate's", score: { people: 1, creative: 2, technical: 1, leadership: 0, healthcare: 1, finance: 1, sports: 2, analytical: 1 } }
+        ]
+      },
+      {
+        text: "Do you prefer working with details or big picture?",
+        answers: [
+          { text: "Details", score: { people: 0, creative: 1, technical: 3, leadership: 0, healthcare: 2, finance: 2, sports: 1, analytical: 3 } },
+          { text: "Both", score: { people: 1, creative: 1, technical: 2, leadership: 2, healthcare: 2, finance: 2, sports: 1, analytical: 2 } },
+          { text: "Big picture", score: { people: 2, creative: 2, technical: 0, leadership: 3, healthcare: 1, finance: 1, sports: 2, analytical: 0 } }
+        ]
+      },
+      {
+        text: "How do you feel about competitive environments?",
+        answers: [
+          { text: "Love competition", score: { people: 1, creative: 0, technical: 1, leadership: 3, healthcare: 1, finance: 2, sports: 3, analytical: 1 } },
+          { text: "Some competition is fine", score: { people: 1, creative: 1, technical: 1, leadership: 2, healthcare: 1, finance: 2, sports: 2, analytical: 1 } },
+          { text: "Prefer collaboration over competition", score: { people: 3, creative: 2, technical: 1, leadership: 1, healthcare: 3, finance: 1, sports: 0, analytical: 1 } }
+        ]
+      }
+    ];
+    
+    // Randomly select 12 questions for each quiz
+    function getRandomQuestions(allQuestions, count = 12) {
+      const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    }
+    
+    let questions = [];
+
+    let currentQuestion = 0;
+    let scores = {
+      people: 0,
+      creative: 0,
+      technical: 0,
+      leadership: 0,
+      healthcare: 0,
+      finance: 0,
+      sports: 0,
+      analytical: 0
+    };
+
+    function startQuiz() {
+      // Reset scores
+      currentQuestion = 0;
+      scores = {
+        people: 0,
+        creative: 0,
+        technical: 0,
+        leadership: 0,
+        healthcare: 0,
+        finance: 0,
+        sports: 0,
+        analytical: 0
+      };
+      
+      // Get new randomized set of questions for this quiz
+      questions = getRandomQuestions(allQuestions, 12);
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      const box = document.getElementById("quiz-box");
+      
+      // Calculate progress percentage
+      const progress = Math.round(((currentQuestion) / questions.length) * 100);
+      
+      // Build question display
+      box.innerHTML = `
+        <div class="progress-container">
+          <div class="progress-bar" style="width: ${progress}%"></div>
+        </div>
+        <p>Question ${currentQuestion + 1} of ${questions.length}</p>
+        <h2>${q.text}</h2>
+        <div class="answer-container"></div>
+      `;
+      
+      const answerContainer = box.querySelector('.answer-container');
+      
+      // Add answer buttons
+      q.answers.forEach(answer => {
+        const btn = document.createElement("button");
+        btn.textContent = answer.text;
+        btn.onclick = () => {
+          // Add animation class
+          btn.style.backgroundColor = 'var(--secondary-color)';
+          
+          // Update all scores
+          for (let category in answer.score) {
+            scores[category] += answer.score[category];
+          }
+          
+          currentQuestion++;
+          
+          // Short delay before moving to next question
+          setTimeout(() => {
+            if (currentQuestion < questions.length) {
+              showQuestion();
+            } else {
+              showResult();
+            }
+          }, 300);
+        };
+        answerContainer.appendChild(btn);
+      });
+    }
+
+    function showResult() {
+      const box = document.getElementById("quiz-box");
+      
+      // Find the highest scoring categories (can have multiple)
+      const maxPeople = scores.people;
+      const maxCreative = scores.creative;
+      const maxTechnical = scores.technical;
+      const maxLeadership = scores.leadership;
+      
+      // Career recommendations based on score combinations with education requirements and language skills
+      const careers = [
+        // People-oriented careers
+        { 
+          title: "Social Worker", 
+          description: "You love helping people and working in a team. Your strength is empathy and communication.",
+          education: "Bachelor's degree in Social Work (BSW); Master's (MSW) often required for clinical roles",
+          languages: "Spanish or local community languages are beneficial in many regions",
+          match: (scores) => scores.people > 20 && scores.people > scores.creative && scores.people > scores.technical && scores.healthcare > 10
+        },
+        { 
+          title: "Teacher", 
+          description: "You enjoy sharing knowledge and helping others learn. You have patience and strong communication skills.",
+          education: "Bachelor's degree in Education; teaching certification/license required",
+          languages: "Bilingual skills (Spanish, French, Mandarin) can increase job opportunities",
+          match: (scores) => scores.people > 15 && scores.creative > 10 && scores.people > scores.technical
+        },
+        { 
+          title: "Healthcare Professional", 
+          description: "You're compassionate and enjoy making a difference in people's lives through direct care.",
+          education: "Requirements vary: MD for doctors, BSN for nurses, or specific allied health certifications",
+          languages: "Spanish highly beneficial; any second language valuable for patient communication",
+          match: (scores) => scores.people > 15 && scores.healthcare > 20
+        },
+        
+        // Creative careers
+        { 
+          title: "Graphic Designer", 
+          description: "You have a creative eye and enjoy expressing ideas visually. You thrive in artistic environments.",
+          education: "Bachelor's degree in Graphic Design or related field; strong portfolio often matters more than degree",
+          languages: "English proficiency; international agencies may value multilingual skills",
+          match: (scores) => scores.creative > 20 && scores.creative > scores.people && scores.creative > scores.technical
+        },
+        { 
+          title: "Content Creator", 
+          description: "You're imaginative and enjoy producing engaging content across various media.",
+          education: "Degree in Communications, Journalism, or related field helpful; portfolio most important",
+          languages: "Strong English writing skills; additional languages expand audience reach",
+          match: (scores) => scores.creative > 18 && scores.creative > scores.technical && scores.people > 5
+        },
+        { 
+          title: "UX/UI Designer", 
+          description: "You blend creativity with analytical thinking to create user-friendly digital experiences.",
+          education: "Bachelor's in Design, HCI, or related field; UX certifications valuable",
+          languages: "English proficiency; knowledge of HTML/CSS/JavaScript beneficial",
+          match: (scores) => scores.creative > 15 && scores.technical > 10 && scores.people > 5
+        },
+        
+        // Technical careers
+        { 
+          title: "Software Developer", 
+          description: "You enjoy logical thinking, solving problems, and working with technology.",
+          education: "Bachelor's in Computer Science or related field; certifications or bootcamp can substitute",
+          languages: "Programming languages (Python, JavaScript, Java, etc.) are essential",
+          match: (scores) => scores.technical > 20 && scores.technical > scores.people && scores.technical > scores.creative && scores.analytical > 15
+        },
+        { 
+          title: "Data Analyst", 
+          description: "You excel at interpreting complex data and finding meaningful patterns.",
+          education: "Bachelor's in Statistics, Mathematics, Economics, or Computer Science",
+          languages: "SQL, Python or R programming languages required; business language skills a plus",
+          match: (scores) => scores.technical > 18 && scores.technical > scores.creative && scores.people < 10 && scores.analytical > 18 && scores.finance > 10
+        },
+        { 
+          title: "IT Specialist", 
+          description: "You're technically minded with strong problem-solving abilities and attention to detail.",
+          education: "Associate's or Bachelor's in IT or Computer Science; technical certifications (CompTIA, Cisco)",
+          languages: "Technical documentation often requires English; scripting languages beneficial",
+          match: (scores) => scores.technical > 15 && scores.technical > scores.people && scores.leadership < 15
+        },
+        
+        // Leadership careers
+        { 
+          title: "Business Manager", 
+          description: "You're organized, decisive, and enjoy leading teams to achieve goals.",
+          education: "Bachelor's in Business Administration; MBA often preferred for advancement",
+          languages: "English proficiency; additional languages valuable for international business",
+          match: (scores) => scores.leadership > 20 && scores.leadership > scores.creative && scores.people > 10
+        },
+        { 
+          title: "Entrepreneur", 
+          description: "You're innovative, goal-oriented, and comfortable taking calculated risks.",
+          education: "No specific degree required; business education helpful; specialized knowledge in your field",
+          languages: "English proficiency; languages based on target market",
+          match: (scores) => scores.leadership > 15 && scores.creative > 10 && scores.technical > 5 && scores.finance > 10
+        },
+        { 
+          title: "Project Manager", 
+          description: "You excel at organizing resources, coordinating teams, and delivering results on time.",
+          education: "Bachelor's degree in related field; PMP or other PM certifications valuable",
+          languages: "English proficiency; additional languages helpful for global projects",
+          match: (scores) => scores.leadership > 15 && scores.technical > 10 && scores.people > 5
+        },
+        
+        // Finance careers
+        { 
+          title: "Financial Analyst", 
+          description: "You have strong analytical abilities and enjoy working with financial data and markets.",
+          education: "Bachelor's in Finance, Economics, or Accounting; CFA certification valuable",
+          languages: "English proficiency; programming languages like Python or R increasingly important",
+          match: (scores) => scores.finance > 20 && scores.analytical > 15 && scores.technical > 10
+        },
+        {
+          title: "Investment Banker",
+          description: "You're driven, analytical, and thrive in competitive, fast-paced environments with high rewards.",
+          education: "Bachelor's in Finance, Economics or Business; MBA from top school often expected",
+          languages: "English proficiency; Mandarin, German, or other major business languages valuable",
+          match: (scores) => scores.finance > 18 && scores.leadership > 15 && scores.analytical > 15
+        },
+        {
+          title: "Accountant",
+          description: "You're detail-oriented with strong analytical skills and ethical judgment.",
+          education: "Bachelor's in Accounting; CPA certification for advancement",
+          languages: "English proficiency; additional languages beneficial for international firms",
+          match: (scores) => scores.finance > 15 && scores.analytical > 20 && scores.technical > 10
+        },
+        
+        // Sports careers
+        {
+          title: "Sports Coach",
+          description: "You're passionate about athletics and helping others achieve their physical potential.",
+          education: "Bachelor's in Physical Education, Exercise Science, or related field; sport-specific certifications",
+          languages: "English proficiency; Spanish or other languages helpful depending on location",
+          match: (scores) => scores.sports > 20 && scores.leadership > 15 && scores.people > 15
+        },
+        {
+          title: "Athletic Trainer",
+          description: "You combine knowledge of sports medicine with hands-on care for athletes.",
+          education: "Bachelor's or Master's in Athletic Training; certification required",
+          languages: "English proficiency; Spanish beneficial in many settings",
+          match: (scores) => scores.sports > 18 && scores.healthcare > 15
+        },
+        {
+          title: "Sports Management Professional",
+          description: "You combine business acumen with passion for sports to manage teams or facilities.",
+          education: "Bachelor's in Sports Management, Business, or related field",
+          languages: "English proficiency; additional languages valuable for international sports",
+          match: (scores) => scores.sports > 15 && scores.leadership > 15 && scores.finance > 10
+        },
+        
+        // Healthcare careers
+        {
+          title: "Physician",
+          description: "You're dedicated to diagnosing, treating illnesses and promoting overall health.",
+          education: "Medical Doctor (MD) degree; 3+ years residency; specialty fellowships",
+          languages: "Spanish or other community languages highly beneficial for patient communication",
+          match: (scores) => scores.healthcare > 25 && scores.analytical > 15 && scores.people > 10
+        },
+        {
+          title: "Registered Nurse",
+          description: "You enjoy providing direct patient care with a balance of technical and people skills.",
+          education: "Bachelor of Science in Nursing (BSN); licensing required",
+          languages: "Spanish or local community languages beneficial",
+          match: (scores) => scores.healthcare > 20 && scores.people > 15 && scores.technical > 5
+        },
+        {
+          title: "Physical Therapist",
+          description: "You help people recover physical function through exercise and rehabilitation.",
+          education: "Doctor of Physical Therapy (DPT)",
+          languages: "Spanish helpful; clear communication in patient's language important",
+          match: (scores) => scores.healthcare > 18 && scores.sports > 15 && scores.people > 15
+        },
+        
+        // Balanced careers
+        { 
+          title: "Marketing Specialist", 
+          description: "You blend creativity with analysis to develop effective marketing strategies.",
+          education: "Bachelor's in Marketing, Communications, or Business",
+          languages: "English proficiency; additional languages valuable for international marketing",
+          match: (scores) => scores.creative > 12 && scores.technical > 8 && scores.people > 8
+        },
+        { 
+          title: "Customer Success Manager", 
+          description: "You enjoy helping customers while also understanding technical products.",
+          education: "Bachelor's degree; technical knowledge in relevant industry",
+          languages: "English proficiency; additional languages based on customer base",
+          match: (scores) => scores.people > 12 && scores.technical > 8 && scores.leadership > 8
+        },
+        { 
+          title: "Product Manager", 
+          description: "You have a balanced skill set that bridges technical understanding with user needs.",
+          education: "Bachelor's in Business, Engineering, or Computer Science; MBA sometimes preferred",
+          languages: "English proficiency; technical language fluency helpful",
+          match: (scores) => scores.technical > 10 && scores.people > 10 && scores.leadership > 10
+        },
+      ];
+      
+      // Find matching careers
+      const matchingCareers = careers.filter(career => 
+        career.match(scores)
+      );
+      
+      // If no specific matches, find the top skills and recommend based on that
+      let recommendedCareers = matchingCareers;
+      if (matchingCareers.length === 0) {
+        const topCategory = Object.entries(scores)
+          .sort((a, b) => b[1] - a[1])[0][0];
+          
+        switch(topCategory) {
+          case 'people':
+            recommendedCareers = [
+              careers[0], // Social Worker
+              careers[1], // Teacher
+              careers[2]  // Healthcare Professional
+            ];
+            break;
+          case 'creative':
+            recommendedCareers = [
+              careers[3], // Graphic Designer
+              careers[4], // Content Creator
+              careers[5]  // UX/UI Designer
+            ];
+            break;
+          case 'technical':
+            recommendedCareers = [
+              careers[6], // Software Developer
+              careers[7], // Data Analyst
+              careers[8]  // IT Specialist
+            ];
+            break;
+          case 'leadership':
+            recommendedCareers = [
+              careers[9],  // Business Manager
+              careers[10], // Entrepreneur
+              careers[11]  // Project Manager
+            ];
+            break;
+          case 'finance':
+            recommendedCareers = [
+              careers[12], // Financial Analyst
+              careers[13], // Investment Banker
+              careers[14]  // Accountant
+            ];
+            break;
+          case 'sports':
+            recommendedCareers = [
+              careers[15], // Sports Coach
+              careers[16], // Athletic Trainer
+              careers[17]  // Sports Management Professional
+            ];
+            break;
+          case 'healthcare':
+            recommendedCareers = [
+              careers[18], // Physician
+              careers[19], // Registered Nurse
+              careers[20]  // Physical Therapist
+            ];
+            break;
+          case 'analytical':
+            recommendedCareers = [
+              careers[7],  // Data Analyst
+              careers[14], // Accountant  
+              careers[6]   // Software Developer
+            ];
+            break;
+        }
+      }
+      
+      // Limit to top 3 recommendations
+      recommendedCareers = recommendedCareers.slice(0, 3);
+      
+      // Format the primary recommendation
+      const primaryCareer = recommendedCareers[0];
+      let resultCards = "";
+      
+      // Add each recommended career as a card
+      recommendedCareers.forEach((career, index) => {
+        const isPrimary = index === 0;
+        resultCards += `
+          <div class="result-card ${isPrimary ? 'primary-result' : ''}" style="--i:${index + 1}">
+            <h3 class="job-title">${career.title}</h3>
+            <p>${career.description}</p>
+            <div class="career-requirements">
+              <p><strong>Education Required:</strong> ${career.education}</p>
+              <p><strong>Language Skills:</strong> ${career.languages}</p>
+            </div>
+          </div>
+        `;
+      });
+      
+      // Calculate percentages for skills
+      const calculateScore = (score) => Math.min(Math.round((score / 30) * 100), 100);
+      const peopleScore = calculateScore(scores.people);
+      const creativeScore = calculateScore(scores.creative);
+      const technicalScore = calculateScore(scores.technical);
+      const leadershipScore = calculateScore(scores.leadership);
+      const healthcareScore = calculateScore(scores.healthcare);
+      const financeScore = calculateScore(scores.finance);
+      const sportsScore = calculateScore(scores.sports);
+      const analyticalScore = calculateScore(scores.analytical);
+      
+      // Build the complete result display
+      const resultContent = `
+        <h2>Your Dream Job Results</h2>
+        ${resultCards}
+        <div class="skills-breakdown">
+          <h3>Your Skills Profile</h3>
+          <div class="skill-bubbles">
+            <div class="skill-bubble" style="--i:1">
+              <span class="skill-level">${peopleScore}%</span>
+              <span class="skill-name">People Skills</span>
+              <div class="bubble-fill" style="height: ${peopleScore}%"></div>
+            </div>
+            <div class="skill-bubble" style="--i:2">
+              <span class="skill-level">${creativeScore}%</span>
+              <span class="skill-name">Creativity</span>
+              <div class="bubble-fill" style="height: ${creativeScore}%"></div>
+            </div>
+            <div class="skill-bubble" style="--i:3">
+              <span class="skill-level">${technicalScore}%</span>
+              <span class="skill-name">Technical</span>
+              <div class="bubble-fill" style="height: ${technicalScore}%"></div>
+            </div>
+            <div class="skill-bubble" style="--i:4">
+              <span class="skill-level">${leadershipScore}%</span>
+              <span class="skill-name">Leadership</span>
+              <div class="bubble-fill" style="height: ${leadershipScore}%"></div>
+            </div>
+            <div class="skill-bubble" style="--i:5">
+              <span class="skill-level">${healthcareScore}%</span>
+              <span class="skill-name">Healthcare</span>
+              <div class="bubble-fill" style="height: ${healthcareScore}%"></div>
+            </div>
+            <div class="skill-bubble" style="--i:6">
+              <span class="skill-level">${financeScore}%</span>
+              <span class="skill-name">Finance</span>
+              <div class="bubble-fill" style="height: ${financeScore}%"></div>
+            </div>
+            <div class="skill-bubble" style="--i:7">
+              <span class="skill-level">${sportsScore}%</span>
+              <span class="skill-name">Sports</span>
+              <div class="bubble-fill" style="height: ${sportsScore}%"></div>
+            </div>
+            <div class="skill-bubble" style="--i:8">
+              <span class="skill-level">${analyticalScore}%</span>
+              <span class="skill-name">Analytical</span>
+              <div class="bubble-fill" style="height: ${analyticalScore}%"></div>
+            </div>
+          </div>
+        </div>
+        <p>Based on your answers, these career paths would be a great match for your personality and preferences.</p>
+        <button onclick="startQuiz()">Take Quiz Again</button>
+        <button onclick="shareResult('${primaryCareer.title}')">Share Result</button>
+      `;
+      
+      box.innerHTML = resultContent;
+    }
+    
+    function shareResult(result) {
+      // Check if Web Share API is supported
+      if (navigator.share) {
+        navigator.share({
+          title: 'My Dream Job Quiz Result',
+          text: `According to the Dream Job Quiz, I should be a ${result}! Try it yourself!`,
+          url: window.location.href
+        })
+        .catch(error => {
+          console.log('Error sharing:', error);
+        });
+      } else {
+        alert('Share feature is not supported on your browser. Copy the URL to share manually!');
+      }
+    }
+  </script>
+</body>
+</html>
