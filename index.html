@@ -480,7 +480,72 @@
           { text: "Some competition is fine", score: { people: 1, creative: 1, technical: 1, leadership: 2, healthcare: 1, finance: 2, sports: 2, analytical: 1 } },
           { text: "Prefer collaboration over competition", score: { people: 3, creative: 2, technical: 1, leadership: 1, healthcare: 3, finance: 1, sports: 0, analytical: 1 } }
         ]
-      }
+      },
+      // New questions for more accuracy
+      {
+        text: "Do you prefer working alone or in a team?",
+        answers: [
+          { text: "Team", score: { people: 3, leadership: 2, creative: 1, technical: 0, healthcare: 1, finance: 1, sports: 2, analytical: 0 } },
+          { text: "Both", score: { people: 2, leadership: 1, creative: 1, technical: 1, healthcare: 1, finance: 1, sports: 1, analytical: 1 } },
+          { text: "Alone", score: { people: 0, leadership: 0, creative: 1, technical: 2, healthcare: 0, finance: 2, sports: 0, analytical: 2 } }
+        ]
+      },
+      {
+        text: "Would you rather work remotely or on-site?",
+        answers: [
+          { text: "Remotely", score: { technical: 2, creative: 2, analytical: 2, people: 0, leadership: 0, finance: 2, sports: 0, healthcare: 0 } },
+          { text: "On-site", score: { people: 2, leadership: 1, sports: 2, healthcare: 2, creative: 1, technical: 0, finance: 0, analytical: 0 } },
+          { text: "Hybrid", score: { people: 1, leadership: 1, creative: 1, technical: 1, finance: 1, sports: 1, healthcare: 1, analytical: 1 } }
+        ]
+      },
+      {
+        text: "How do you feel about taking risks at work?",
+        answers: [
+          { text: "Love it", score: { leadership: 3, finance: 2, technical: 1, people: 1, sports: 2, creative: 1, healthcare: 0, analytical: 1 } },
+          { text: "Sometimes", score: { leadership: 2, finance: 1, technical: 1, people: 1, sports: 1, creative: 1, healthcare: 0, analytical: 1 } },
+          { text: "Prefer stability", score: { leadership: 0, finance: 0, technical: 1, people: 2, sports: 0, creative: 1, healthcare: 1, analytical: 2 } }
+        ]
+      },
+      {
+        text: "Are you interested in helping animals?",
+        answers: [
+          { text: "Yes, very much", score: { healthcare: 2, people: 2, creative: 0, technical: 1, leadership: 0, finance: 0, sports: 0, analytical: 1, animal: 3 } },
+          { text: "Somewhat", score: { healthcare: 1, people: 1, creative: 0, technical: 1, leadership: 0, finance: 0, sports: 0, analytical: 1, animal: 2 } },
+          { text: "Not really", score: { healthcare: 0, people: 0, creative: 1, technical: 1, leadership: 0, finance: 1, sports: 0, analytical: 1, animal: 0 } }
+        ]
+      },
+      {
+        text: "Do you enjoy science and technology?",
+        answers: [
+          { text: "Love it", score: { technical: 3, analytical: 2, creative: 1, people: 0, leadership: 0, finance: 1, sports: 0, healthcare: 1 } },
+          { text: "It's interesting", score: { technical: 2, analytical: 1, creative: 1, people: 1, leadership: 0, finance: 1, sports: 0, healthcare: 1 } },
+          { text: "Not really", score: { technical: 0, analytical: 0, creative: 1, people: 2, leadership: 1, finance: 0, sports: 1, healthcare: 0 } }
+        ]
+      },
+      {
+        text: "Do you enjoy helping people with mental health or counseling?",
+        answers: [
+          { text: "Yes, very much", score: { people: 3, healthcare: 2, leadership: 1, creative: 0, technical: 0, finance: 0, sports: 0, analytical: 1 } },
+          { text: "Somewhat", score: { people: 2, healthcare: 1, leadership: 1, creative: 0, technical: 0, finance: 0, sports: 0, analytical: 1 } },
+          { text: "Not really", score: { people: 0, healthcare: 0, leadership: 0, creative: 1, technical: 1, finance: 1, sports: 1, analytical: 1 } }
+        ]
+      },
+      {
+        text: "Do you enjoy working with children?",
+        answers: [
+          { text: "Yes, love it", score: { people: 3, healthcare: 1, leadership: 1, creative: 1, technical: 0, finance: 0, sports: 1, analytical: 0 } },
+          { text: "Sometimes", score: { people: 2, healthcare: 1, leadership: 1, creative: 1, technical: 0, finance: 0, sports: 1, analytical: 0 } },
+          { text: "Not really", score: { people: 0, healthcare: 0, leadership: 0, creative: 1, technical: 1, finance: 1, sports: 0, analytical: 1 } }
+        ]
+      },
+      {
+        text: "Do you enjoy organizing events or logistics?",
+        answers: [
+          { text: "Yes, very much", score: { leadership: 3, people: 2, analytical: 2, technical: 1, creative: 1, finance: 1, sports: 1, healthcare: 0 } },
+          { text: "Sometimes", score: { leadership: 2, people: 1, analytical: 1, technical: 1, creative: 1, finance: 1, sports: 1, healthcare: 0 } },
+          { text: "Not really", score: { leadership: 0, people: 0, analytical: 0, technical: 1, creative: 1, finance: 1, sports: 0, healthcare: 0 } }
+        ]
+      },
     ];
     
     // Randomly select 12 questions for each quiz
